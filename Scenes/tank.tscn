@@ -1,0 +1,106 @@
+[gd_scene load_steps=13 format=3 uid="uid://dw3a0or0rjn6w"]
+
+[ext_resource type="Script" path="res://Scripts/tank_movement.gd" id="1_qnids"]
+[ext_resource type="Texture2D" uid="uid://drp8u200dxbsb" path="res://Assets/Textures/Prototype/Dark/texture_06.png" id="2_8qfay"]
+[ext_resource type="Texture2D" uid="uid://41yehctv5cwr" path="res://Assets/Textures/Prototype/Dark/texture_01.png" id="3_nrsaj"]
+[ext_resource type="Script" path="res://Scripts/weapon_control.gd" id="3_xpnu8"]
+[ext_resource type="Texture2D" uid="uid://birs5p7jxilpj" path="res://Assets/Textures/Prototype/Dark/texture_04.png" id="4_f1hyi"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i3cqn"]
+albedo_texture = ExtResource("2_8qfay")
+uv1_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qlnq8"]
+size = Vector3(1, 0.5, 2)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ba78s"]
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hmygx"]
+albedo_texture = ExtResource("3_nrsaj")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g7e6d"]
+albedo_texture = ExtResource("4_f1hyi")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3fs6g"]
+albedo_texture = ExtResource("4_f1hyi")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t4nc7"]
+albedo_texture = ExtResource("4_f1hyi")
+uv1_triplanar = true
+
+[node name="tank" type="VehicleBody3D" node_paths=PackedStringArray("left_wheel", "right_wheel")]
+script = ExtResource("1_qnids")
+left_wheel = NodePath("left_wheel")
+right_wheel = NodePath("right_wheel")
+acceleration_amount = 10.0
+deceleration_amount = 10.0
+max_throttle = 50.0
+max_reverse_throttle = -10.0
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+size = Vector3(1, 0.5, 2)
+material = SubResource("StandardMaterial3D_i3cqn")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_qlnq8")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5)
+shape = SubResource("CapsuleShape3D_ba78s")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+shape = SubResource("CapsuleShape3D_ba78s")
+
+[node name="weapon_control" type="Node" parent="." node_paths=PackedStringArray("turret", "barrel")]
+script = ExtResource("3_xpnu8")
+turret = NodePath("../turret_base")
+barrel = NodePath("../turret_base/turret/barrel_base")
+rotate_speed = 2.0
+elevate_speed = 1.0
+
+[node name="turret_base" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+
+[node name="turret" type="CSGCylinder3D" parent="turret_base"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+height = 0.5
+sides = 16
+material = SubResource("StandardMaterial3D_hmygx")
+
+[node name="barrel_base" type="Node3D" parent="turret_base/turret"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.25)
+
+[node name="barrel" type="CSGCylinder3D" parent="turret_base/turret/barrel_base"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.5)
+radius = 0.1
+height = 1.0
+material = SubResource("StandardMaterial3D_g7e6d")
+
+[node name="left_wheel" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0, 0)
+suspension_stiffness = 50.0
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="left_wheel"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+inner_radius = 0.35
+outer_radius = 0.5
+sides = 16
+ring_sides = 8
+material = SubResource("StandardMaterial3D_3fs6g")
+
+[node name="right_wheel" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0, 0)
+suspension_stiffness = 50.0
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="right_wheel"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+inner_radius = 0.35
+outer_radius = 0.5
+sides = 16
+ring_sides = 8
+material = SubResource("StandardMaterial3D_t4nc7")

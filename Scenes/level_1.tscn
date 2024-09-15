@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://c2ellpecblpop"]
+
+[ext_resource type="Texture2D" uid="uid://c038dr7fe51rr" path="res://Assets/Textures/Prototype/Light/texture_02.png" id="1_ls1ty"]
+[ext_resource type="PackedScene" uid="uid://dw3a0or0rjn6w" path="res://Scenes/tank.tscn" id="2_dradb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvkm7"]
+albedo_texture = ExtResource("1_ls1ty")
+uv1_triplanar = true
+
+[node name="level_1" type="Node3D"]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(100, 1, 100)
+material = SubResource("StandardMaterial3D_dvkm7")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.807897, 0.510369, -0.294662, 0, 0.5, 0.866025, 0.589323, -0.69966, 0.403949, 0, 4, 0)
+
+[node name="tank" parent="." instance=ExtResource("2_dradb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="Camera3D" type="Camera3D" parent="tank"]
+transform = Transform3D(-1, 5.01436e-08, -7.16125e-08, 0, 0.819152, 0.573576, 8.74228e-08, 0.573576, -0.819152, 0, 2.5, -2.5)
