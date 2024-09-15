@@ -11,10 +11,6 @@ var current_throttle : float = 0
 @export var max_throttle : float
 @export var max_reverse_throttle : float
 
-func _ready() -> void:
-	print(max_throttle)
-	print(max_reverse_throttle)
-
 
 func _process(delta: float) -> void:
 	# Throttle control
@@ -26,12 +22,11 @@ func _process(delta: float) -> void:
 	# Left Right track control
 	if Input.is_action_pressed("left_stick") :
 		left_wheel.engine_force = current_throttle
-		print("LEFT STICK")
 	else :
 		left_wheel.engine_force = 0
+	
 	if Input.is_action_pressed("right_stick") :
 		right_wheel.engine_force = current_throttle
-		print("RIGHT STICK")
 	else :
 		right_wheel.engine_force = 0
 		
