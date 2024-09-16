@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://c2ellpecblpop"]
+[gd_scene load_steps=4 format=3 uid="uid://c2ellpecblpop"]
 
 [ext_resource type="Texture2D" uid="uid://c038dr7fe51rr" path="res://Assets/Textures/Prototype/Light/texture_02.png" id="1_ls1ty"]
 [ext_resource type="PackedScene" uid="uid://dw3a0or0rjn6w" path="res://Scenes/tank.tscn" id="2_dradb"]
@@ -6,8 +6,6 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvkm7"]
 albedo_texture = ExtResource("1_ls1ty")
 uv1_triplanar = true
-
-[sub_resource type="Curve3D" id="Curve3D_ceoip"]
 
 [node name="level_1" type="Node3D"]
 
@@ -23,14 +21,5 @@ transform = Transform3D(0.807897, 0.510369, -0.294662, 0, 0.5, 0.866025, 0.58932
 [node name="tank" parent="." instance=ExtResource("2_dradb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
-[node name="Path3D" type="Path3D" parent="tank"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -2.5)
-curve = SubResource("Curve3D_ceoip")
-
-[node name="PathFollow3D" type="PathFollow3D" parent="tank/Path3D"]
-
-[node name="Camera3D" type="Camera3D" parent="tank/Path3D/PathFollow3D"]
-transform = Transform3D(-1, 5.01436e-08, -7.16125e-08, 0, 0.819152, 0.573576, 8.74228e-08, 0.573576, -0.819152, 0, 0, 0)
-
-[node name="CSGSphere3D" type="CSGSphere3D" parent="tank/Path3D/PathFollow3D/Camera3D"]
-radius = 0.1
+[node name="Camera3D" type="Camera3D" parent="tank"]
+transform = Transform3D(-1, 5.01436e-08, -7.16126e-08, 0, 0.819152, 0.573576, 8.74228e-08, 0.573576, -0.819152, 0, 2.5, -2.5)

@@ -40,7 +40,7 @@ right_wheel = NodePath("right_wheel")
 acceleration_amount = 50.0
 deceleration_amount = 50.0
 max_throttle = 100.0
-max_reverse_throttle = -10.0
+max_reverse_throttle = -50.0
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 size = Vector3(1, 0.5, 2)
@@ -82,8 +82,15 @@ radius = 0.1
 height = 1.0
 material = SubResource("StandardMaterial3D_g7e6d")
 
-[node name="wheel_properties" type="Node" parent="."]
+[node name="wheel_properties" type="Node" parent="." node_paths=PackedStringArray("left_wheel", "right_wheel")]
 script = ExtResource("6_5p2uo")
+left_wheel = NodePath("../left_wheel")
+right_wheel = NodePath("../right_wheel")
+roll_influence = 0.5
+friction_slip = 1.0
+stiffness = 200.0
+compression = 0.5
+relaxation = 0.8
 
 [node name="left_wheel" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.134421, 0)
