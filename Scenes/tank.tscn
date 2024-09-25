@@ -1,7 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://dw3a0or0rjn6w"]
+[gd_scene load_steps=15 format=3 uid="uid://dw3a0or0rjn6w"]
 
-[ext_resource type="Script" path="res://Scripts/tank_movement.gd" id="1_qnids"]
 [ext_resource type="Texture2D" uid="uid://drp8u200dxbsb" path="res://Assets/Textures/Prototype/Dark/texture_06.png" id="2_8qfay"]
+[ext_resource type="Script" path="res://Scripts/NEW_tank_movement.gd" id="2_iisf5"]
+[ext_resource type="Script" path="res://Scripts/gear_control.gd" id="2_l5mxv"]
+[ext_resource type="FontFile" uid="uid://4t2c5vl12esg" path="res://Assets/Fonts/Quantico-Regular.ttf" id="2_sbc7v"]
 [ext_resource type="Texture2D" uid="uid://41yehctv5cwr" path="res://Assets/Textures/Prototype/Dark/texture_01.png" id="3_nrsaj"]
 [ext_resource type="Script" path="res://Scripts/weapon_control.gd" id="3_xpnu8"]
 [ext_resource type="Texture2D" uid="uid://birs5p7jxilpj" path="res://Assets/Textures/Prototype/Dark/texture_04.png" id="4_f1hyi"]
@@ -13,9 +15,6 @@ uv1_triplanar = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qlnq8"]
 size = Vector3(1, 0.5, 2)
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ba78s"]
-height = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hmygx"]
 albedo_texture = ExtResource("3_nrsaj")
@@ -33,29 +32,44 @@ uv1_triplanar = true
 albedo_texture = ExtResource("4_f1hyi")
 uv1_triplanar = true
 
-[node name="tank" type="VehicleBody3D" node_paths=PackedStringArray("left_wheel", "right_wheel")]
-script = ExtResource("1_qnids")
-left_wheel = NodePath("left_wheel")
-right_wheel = NodePath("right_wheel")
-acceleration_amount = 50.0
-deceleration_amount = 50.0
-max_throttle = 100.0
-max_reverse_throttle = -50.0
+[node name="tank" type="VehicleBody3D"]
+
+[node name="gear_control" type="Node" parent="." node_paths=PackedStringArray("gear_label", "parked_label")]
+script = ExtResource("2_l5mxv")
+gear_label = NodePath("../gear_label")
+parked_label = NodePath("../parked_label")
+
+[node name="tank_movement" type="Node" parent="." node_paths=PackedStringArray("throttle_label", "tank_base", "gear_control", "wheel_properties", "left_wheels", "right_wheels")]
+script = ExtResource("2_iisf5")
+throttle_label = NodePath("../throttle_label")
+tank_base = NodePath("..")
+gear_control = NodePath("../gear_control")
+wheel_properties = NodePath("../wheel_properties")
+left_wheels = [NodePath("../left_wheel"), NodePath("../left_wheel2"), NodePath("../left_wheel3")]
+right_wheels = [NodePath("../right_wheel"), NodePath("../right_wheel2"), NodePath("../right_wheel3")]
+
+[node name="throttle_label" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, -6.18172e-08, 0.707107, 0.707107, 6.18172e-08, 0.707107, -0.707107, 0, 0.930415, -0.574194)
+text = "Throttle: --"
+
+[node name="parked_label" type="Label3D" parent="."]
+transform = Transform3D(-1, -4.37114e-08, 5.96046e-08, 2.08033e-08, 0.786719, 0.61731, -9.73217e-08, 0.61731, -0.786719, 0, 0.736677, -0.746611)
+text = "Parked: --"
+font = ExtResource("2_sbc7v")
+font_size = 40
+
+[node name="gear_label" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, 8.74228e-08, 4.37114e-08, 0.866025, 0.5, -7.57103e-08, 0.5, -0.866025, 0, 0.5, -0.9)
+text = "Gear: --"
+font = ExtResource("2_sbc7v")
+font_size = 40
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
-size = Vector3(1, 0.5, 2)
+size = Vector3(2, 0.5, 2)
 material = SubResource("StandardMaterial3D_i3cqn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_qlnq8")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5)
-shape = SubResource("CapsuleShape3D_ba78s")
-
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
-shape = SubResource("CapsuleShape3D_ba78s")
 
 [node name="weapon_control" type="Node" parent="." node_paths=PackedStringArray("turret", "barrel")]
 script = ExtResource("3_xpnu8")
@@ -65,7 +79,7 @@ rotate_speed = 2.0
 elevate_speed = 1.0
 
 [node name="turret_base" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.35)
 
 [node name="turret" type="CSGCylinder3D" parent="turret_base"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
@@ -82,18 +96,16 @@ radius = 0.1
 height = 1.0
 material = SubResource("StandardMaterial3D_g7e6d")
 
-[node name="wheel_properties" type="Node" parent="." node_paths=PackedStringArray("left_wheel", "right_wheel")]
+[node name="wheel_properties" type="Node" parent="."]
 script = ExtResource("6_5p2uo")
-left_wheel = NodePath("../left_wheel")
-right_wheel = NodePath("../right_wheel")
-roll_influence = 0.5
+roll_influence = 0.25
 friction_slip = 1.0
 stiffness = 200.0
 compression = 0.5
 relaxation = 0.8
 
 [node name="left_wheel" type="VehicleWheel3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.134421, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, -0.275, 1)
 suspension_stiffness = 50.0
 
 [node name="CSGTorus3D" type="CSGTorus3D" parent="left_wheel"]
@@ -104,11 +116,59 @@ sides = 16
 ring_sides = 8
 material = SubResource("StandardMaterial3D_3fs6g")
 
+[node name="left_wheel2" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, -0.275, 0)
+suspension_stiffness = 50.0
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="left_wheel2"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+inner_radius = 0.35
+outer_radius = 0.5
+sides = 16
+ring_sides = 8
+material = SubResource("StandardMaterial3D_3fs6g")
+
+[node name="left_wheel3" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, -0.275, -1)
+suspension_stiffness = 50.0
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="left_wheel3"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+inner_radius = 0.35
+outer_radius = 0.5
+sides = 16
+ring_sides = 8
+material = SubResource("StandardMaterial3D_3fs6g")
+
 [node name="right_wheel" type="VehicleWheel3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, -0.134421, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, -0.275, 1)
 suspension_stiffness = 50.0
 
 [node name="CSGTorus3D" type="CSGTorus3D" parent="right_wheel"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+inner_radius = 0.35
+outer_radius = 0.5
+sides = 16
+ring_sides = 8
+material = SubResource("StandardMaterial3D_t4nc7")
+
+[node name="right_wheel2" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, -0.275, 0)
+suspension_stiffness = 50.0
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="right_wheel2"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+inner_radius = 0.35
+outer_radius = 0.5
+sides = 16
+ring_sides = 8
+material = SubResource("StandardMaterial3D_t4nc7")
+
+[node name="right_wheel3" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, -0.275, -1)
+suspension_stiffness = 50.0
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="right_wheel3"]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
 inner_radius = 0.35
 outer_radius = 0.5
