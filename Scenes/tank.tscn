@@ -99,8 +99,6 @@ material = SubResource("StandardMaterial3D_g7e6d")
 [node name="wheel_properties" type="Node" parent="."]
 script = ExtResource("6_5p2uo")
 roll_influence = 0.25
-friction_slip = 1.0
-stiffness = 200.0
 compression = 0.5
 relaxation = 0.8
 

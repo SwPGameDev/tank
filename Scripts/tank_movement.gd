@@ -24,7 +24,6 @@ var gear_dict = {"reverse": -1, "neutral": 0, "park": 1, "drive_one": 2, "drive_
 var current_gear : gearing
 
 func _ready() -> void:
-	#gear_label_update()
 	
 	var selected_gear = gear_dict[gear_enum]
 	print(selected_gear)
@@ -73,17 +72,3 @@ func park() :
 		current_gear == gearing.park
 	pass
 	
-#func gear_label_update() :
-	#match current_gear :
-		#gearing.reverse :
-			#gear_label.text = "Gear: Reverse"
-		#gearing.neutral :
-			#gear_label.text = "Gear: Neutral"
-		#gearing.park :
-			#gear_label.text = "Gear: Park"
-		#gearing.drive_one :
-			#gear_label.text = "Gear: Drive One"
-		#gearing.drive_two :
-			#gear_label.text = "Gear: Drive Two"
-		#
-	#
