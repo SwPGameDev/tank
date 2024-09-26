@@ -103,7 +103,7 @@ compression = 0.5
 relaxation = 0.8
 
 [node name="left_wheel" type="VehicleWheel3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, -0.275, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, -0.275, 1.1)
 suspension_stiffness = 50.0
 
 [node name="CSGTorus3D" type="CSGTorus3D" parent="left_wheel"]
@@ -127,7 +127,7 @@ ring_sides = 8
 material = SubResource("StandardMaterial3D_3fs6g")
 
 [node name="left_wheel3" type="VehicleWheel3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, -0.275, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, -0.275, -1.1)
 suspension_stiffness = 50.0
 
 [node name="CSGTorus3D" type="CSGTorus3D" parent="left_wheel3"]
@@ -139,7 +139,7 @@ ring_sides = 8
 material = SubResource("StandardMaterial3D_3fs6g")
 
 [node name="right_wheel" type="VehicleWheel3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, -0.275, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, -0.275, 1.1)
 suspension_stiffness = 50.0
 
 [node name="CSGTorus3D" type="CSGTorus3D" parent="right_wheel"]
@@ -163,7 +163,7 @@ ring_sides = 8
 material = SubResource("StandardMaterial3D_t4nc7")
 
 [node name="right_wheel3" type="VehicleWheel3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, -0.275, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, -0.275, -1.1)
 suspension_stiffness = 50.0
 
 [node name="CSGTorus3D" type="CSGTorus3D" parent="right_wheel3"]

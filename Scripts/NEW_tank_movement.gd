@@ -10,7 +10,7 @@ extends Node
 
 @export var left_wheels : Array[VehicleWheel3D] = []
 @export var right_wheels : Array[VehicleWheel3D] = []
-var combined_wheels : Array[VehicleWheel3D] = left_wheels + right_wheels
+var combined_wheels : Array[VehicleWheel3D] = []
 
 @export_group("Variables")
 var current_throttle : float
@@ -18,6 +18,7 @@ var current_throttle : float
 @export var throttle_acceleration : float = 10
 
 func _ready() -> void:
+	combined_wheels = left_wheels + right_wheels
 	for wheel in combined_wheels :
 		wheel_properties.apply_properties(wheel)
 
@@ -37,13 +38,26 @@ func _process(delta: float) -> void:
 	# ENGINE CONTROL
 	tank_base.engine_force = get_engine_force()
 	
+	track_control()
+
+func track_control() :
 	# LEFT STICK
+	if Input.is_action_just_pressed("left_stick") :
+		for wheel in left_wheels :
+			wheel.rotate_object_local(Vector3(0, 1, 0), 180)
+			
 	if Input.is_action_pressed("left_stick") :
 		for wheel in left_wheels :
 			wheel.use_as_traction = true
+			wheel.wheel_friction_slip = 10
+		for wheel in right_wheels :
+			wheel.wheel_friction_slip = 0
+			
+			
 	if Input.is_action_just_released("left_stick") :
 		for wheel in left_wheels :
 			wheel.use_as_traction = false
+			wheel.rotate_object_local(Vector3(0, 1, 0), 180)
 	
 	#LEFT STICK REVERSE
 	if Input.is_action_pressed("left_stick_reverse") :
