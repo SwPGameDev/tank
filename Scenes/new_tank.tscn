@@ -1,24 +1,25 @@
-[gd_scene load_steps=6 format=3 uid="uid://x805c7druof5"]
+[gd_scene load_steps=5 format=3 uid="uid://x805c7druof5"]
 
 [ext_resource type="Script" path="res://Scripts/real_new_tank_movement.gd" id="1_3j8ow"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7td8b"]
-friction = 0.25
+friction = 0.75
+rough = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_xfitx"]
 size = Vector3(3, 0.5, 6)
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_u1gdr"]
-radius = 0.125
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_wgxce"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3yb3x"]
+radius = 0.25
+height = 5.0
 
 [node name="new_tank" type="RigidBody3D" node_paths=PackedStringArray("left_track_base", "right_track_base")]
+mass = 10.0
 physics_material_override = SubResource("PhysicsMaterial_7td8b")
 script = ExtResource("1_3j8ow")
 left_track_base = NodePath("left_track_base")
 right_track_base = NodePath("right_track_base")
-speed = 500.0
+speed = 100.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_xfitx")
@@ -39,21 +40,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 0)
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="right_track_base"]
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, -0.25, -3)
-shape = SubResource("SphereShape3D_u1gdr")
+[node name="left_collider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 1.5, -0.5, 0)
+shape = SubResource("CapsuleShape3D_3yb3x")
 
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, -0.25, -3)
-shape = SubResource("SphereShape3D_u1gdr")
-
-[node name="CollisionShape3D4" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, -0.25, 3)
-shape = SubResource("SphereShape3D_u1gdr")
-
-[node name="CollisionShape3D5" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, -0.25, 3)
-shape = SubResource("SphereShape3D_u1gdr")
-
-[node name="CollisionShape3D6" type="CollisionShape3D" parent="."]
-shape = SubResource("SphereShape3D_wgxce")
+[node name="right_collider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -1.5, -0.5, 0)
+shape = SubResource("CapsuleShape3D_3yb3x")
