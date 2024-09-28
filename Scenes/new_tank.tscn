@@ -14,12 +14,12 @@ radius = 0.25
 height = 5.0
 
 [node name="new_tank" type="RigidBody3D" node_paths=PackedStringArray("left_track_base", "right_track_base")]
-mass = 10.0
+mass = 50.0
 physics_material_override = SubResource("PhysicsMaterial_7td8b")
 script = ExtResource("1_3j8ow")
 left_track_base = NodePath("left_track_base")
 right_track_base = NodePath("right_track_base")
-speed = 100.0
+speed = 400.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_xfitx")
