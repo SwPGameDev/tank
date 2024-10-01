@@ -1,74 +1,55 @@
-extends VehicleBody3D
+extends RigidBody3D
+class_name player_tank
 
-@export var gear_label : Label3D
+@export var left_track_base : Node3D
+@export var right_track_base : Node3D
 
-@export var left_wheels : Array[VehicleWheel3D] = []
-@export var right_wheels : Array[VehicleWheel3D] = []
+@export var speed : float = 500
+@export var tank_mass : float = 50
 
-var current_throttle : float = 0
+var falling_angular_damp : float = 0.1
+var turning_angular_dampening : float = 0.5
+var straight_angular_dampening : float = 12
 
-@export var acceleration_amount : float
-@export var deceleration_amount : float
-
-@export var max_throttle : float
-@export var max_reverse_throttle : float
-
-enum gearing {reverse, neutral, park, drive_one, drive_two}
-
-
-
-@export_enum("reverse", "neutral", "park", "drive_one", "drive_two") var gear_enum: String = "park"
-var gear_dict = {"reverse": -1, "neutral": 0, "park": 1, "drive_one": 2, "drive_two": 3}
-
-
-var current_gear : gearing
+var grounded : bool
 
 func _ready() -> void:
+	self.mass = tank_mass
 	
-	var selected_gear = gear_dict[gear_enum]
-	print(selected_gear)
 
-func _process(delta: float) -> void:
-	# Throttle control
-	if Input.is_action_pressed("throttle_up") && current_throttle < max_throttle :
-		current_throttle += acceleration_amount * delta
-	if Input.is_action_pressed("throttle_down") && current_throttle > max_reverse_throttle :
-		current_throttle -= deceleration_amount * delta
+func _physics_process(delta: float) -> void:
+	#print(self.get_contact_count())
 	
-	# Left Right track control
-	if Input.is_action_pressed("left_stick") :
-		for left_wheel in left_wheels :
-			left_wheel.engine_force = current_throttle
+	# Grounded Test
+	if self.get_contact_count() == 0 :
+		grounded = false
+		angular_damp = falling_angular_damp
 	else :
-		for left_wheel in left_wheels :
-			left_wheel.engine_force = 0
+		grounded = true
+		if (Input.is_action_pressed("left_stick") && Input.is_action_pressed("right_stick")) || (Input.is_action_pressed("left_stick_reverse") && Input.is_action_pressed("right_stick_reverse")) :
+			angular_damp = straight_angular_dampening
+		elif Input.is_action_pressed("left_stick") || Input.is_action_pressed("right_stick") || Input.is_action_pressed("left_stick_reverse") || Input.is_action_pressed("right_stick_reverse") :
+			angular_damp = turning_angular_dampening
+		else :
+			angular_damp = straight_angular_dampening
 	
-	if Input.is_action_pressed("right_stick") :
-		for right_wheel in right_wheels :
-			right_wheel.engine_force = current_throttle
-	else :
-		for right_wheel in right_wheels :
-			right_wheel.engine_force = 0
-		
-	if Input.is_action_just_pressed("gear_up") :
-		gear_up()
-		
-	if Input.is_action_just_pressed("gear_down") :
-		gear_down()
-		
-	if Input.is_action_just_pressed("park") :
-		park()
 	
-	#print(current_throttle)
+	# Track control
+	var left_stick_position = Input.get_axis("left_stick_reverse", "left_stick")
+	var right_stick_position = Input.get_axis("right_stick_reverse", "right_stick")
+	if left_stick_position != 0 :
+		# LEFT TRACK ANIMATION
+		if grounded :
+			apply_impulse(basis.z * speed * delta * left_stick_position, left_track_base.global_transform.origin - global_transform.origin)
+	if right_stick_position != 0 :
+		# RIGHT TRACK ANIMATION
+		if grounded :
+			apply_impulse(basis.z * speed * delta * right_stick_position, right_track_base.global_transform.origin - global_transform.origin)
 	
-func gear_up() :
-	pass
-	
-func gear_down() :
-	pass
-	
-func park() :
-	if current_gear == gearing.neutral :
-		current_gear == gearing.park
-	pass
+	# Flips tank over
+	if Input.is_action_just_pressed("reset") :
+		position.y += 3
+		angular_velocity = Vector3.ZERO
+		linear_velocity = Vector3.ZERO
+		rotation = Vector3(0, rotation.y, 0)
 	
