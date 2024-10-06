@@ -5,6 +5,7 @@ extends Node
 @export var turret : Node3D
 @export var main_gun : Node3D
 @export var main_gun_muzzle : Node3D
+@export var coax_gun : Node3D
 @export var coax_gun_muzzle : Node3D
 
 @export var shell : PackedScene

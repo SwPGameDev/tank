@@ -321,8 +321,11 @@ script = ExtResource("1_3j8ow")
 left_track_base = NodePath("left_collider")
 right_track_base = NodePath("right_collider")
 
-[node name="debug" type="Node" parent="." node_paths=PackedStringArray("throttle_label", "parked_label", "gear_label")]
+[node name="debug" type="Node" parent="." node_paths=PackedStringArray("tank_movement", "gear_control", "weapon_control", "throttle_label", "parked_label", "gear_label")]
 script = ExtResource("2_tja3y")
+tank_movement = NodePath("..")
+gear_control = NodePath("../gear_control")
+weapon_control = NodePath("../weapon_control")
 throttle_label = NodePath("../throttle_label")
 parked_label = NodePath("../parked_label")
 gear_label = NodePath("../gear_label")
