@@ -1,16 +1,24 @@
-[gd_scene load_steps=34 format=4 uid="uid://dw3a0or0rjn6w"]
+[gd_scene load_steps=42 format=4 uid="uid://dw3a0or0rjn6w"]
 
 [ext_resource type="Script" path="res://Scripts/tank_movement.gd" id="1_3j8ow"]
 [ext_resource type="FontFile" uid="uid://4t2c5vl12esg" path="res://Assets/Fonts/Quantico-Regular.ttf" id="2_6de17"]
 [ext_resource type="Script" path="res://Scripts/tank_debug.gd" id="2_tja3y"]
 [ext_resource type="Script" path="res://Scripts/gear_control.gd" id="3_ukuga"]
+[ext_resource type="Script" path="res://Scripts/audio_control.gd" id="5_60db4"]
 [ext_resource type="AudioStream" uid="uid://cm2o0uqmn2b8m" path="res://Assets/Audio/engine_heavy_average_loop.mp3" id="5_givrw"]
 [ext_resource type="Texture2D" uid="uid://dp5gi7vo25w" path="res://Assets/tank_texture_06.png" id="5_s6sq3"]
+[ext_resource type="AudioStream" uid="uid://cpidkqlwbvwur" path="res://Assets/Audio/tank-track-ratteling-197409.mp3" id="6_o0mwa"]
 [ext_resource type="Texture2D" uid="uid://bupxv7b3iv4oq" path="res://Assets/tank_texture_10.png" id="6_pvbku"]
 [ext_resource type="Script" path="res://Scripts/weapon_control.gd" id="7_hmis2"]
+[ext_resource type="AudioStream" uid="uid://df44gi1uqfg3v" path="res://Assets/Audio/tank-turret-rotate.wav" id="7_vrxor"]
+[ext_resource type="AudioStream" uid="uid://cuhk4jkq8d5s3" path="res://Assets/Audio/cannon.mp3" id="8_6622w"]
 [ext_resource type="Script" path="res://Scripts/camera_behavior.gd" id="8_mqv7x"]
 [ext_resource type="PackedScene" uid="uid://cm1spwou77v6f" path="res://Scenes/shell.tscn" id="8_nkadq"]
 [ext_resource type="PackedScene" uid="uid://ckfnnihwkfphp" path="res://Scenes/bullet.tscn" id="9_ewgrt"]
+[ext_resource type="AudioStream" uid="uid://w287hct0m707" path="res://Assets/Audio/tank-reload-47828.mp3" id="9_wbk81"]
+[ext_resource type="AudioStream" uid="uid://e2hfi1x4prc5" path="res://Assets/Audio/semiautorifle1.wav" id="10_d5ey8"]
+[ext_resource type="Script" path="res://Scripts/main_gun_control.gd" id="17_tordk"]
+[ext_resource type="Script" path="res://Scripts/coax_gun_control.gd" id="18_5mw2g"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7td8b"]
 
@@ -350,9 +358,20 @@ font_size = 40
 [node name="gear_control" type="Node" parent="."]
 script = ExtResource("3_ukuga")
 
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+[node name="audio_control" type="Node" parent="." node_paths=PackedStringArray("engine_audio_stream", "turret_audio_stream", "main_gun_audio_stream", "coax_gun_audio_stream")]
+script = ExtResource("5_60db4")
+engine_audio_stream = NodePath("../engine_audio_stream")
+turret_audio_stream = NodePath("../turret_base/turret_audio_stream")
+main_gun_audio_stream = NodePath("../turret_base/main_gun_base/main_gun_audio_stream")
+coax_gun_audio_stream = NodePath("../turret_base/coax_gun/coax_gun_audio_stream")
+engine_file = ExtResource("6_o0mwa")
+turret_file = ExtResource("7_vrxor")
+main_gun_fire_file = ExtResource("8_6622w")
+main_gun_reload_file = ExtResource("9_wbk81")
+coax_gun_file = ExtResource("10_d5ey8")
+
+[node name="engine_audio_stream" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("5_givrw")
-autoplay = true
 
 [node name="hull_collider" type="CollisionShape3D" parent="."]
 shape = SubResource("ConvexPolygonShape3D_raxj5")
@@ -384,29 +403,46 @@ transform = Transform3D(0.707107, -0.707107, 5.0243e-15, -3.09086e-08, -3.09086e
 mesh = SubResource("ArrayMesh_6w2eg")
 skeleton = NodePath("")
 
-[node name="weapon_control" type="Node" parent="." node_paths=PackedStringArray("tank", "turret", "main_gun", "main_gun_muzzle", "coax_gun_muzzle")]
+[node name="weapon_control" type="Node" parent="." node_paths=PackedStringArray("tank", "turret", "main_gun", "main_gun_muzzle", "coax_gun_control", "audio_control")]
 script = ExtResource("7_hmis2")
 tank = NodePath("..")
 turret = NodePath("../turret_base")
 main_gun = NodePath("../turret_base/main_gun_base")
 main_gun_muzzle = NodePath("../turret_base/main_gun_base/main_gun_muzzle")
-coax_gun_muzzle = NodePath("../turret_base/coax_gun/coax_gun_muzzle")
+coax_gun_control = NodePath("../coax_gun_control")
+audio_control = NodePath("../audio_control")
 shell = ExtResource("8_nkadq")
-bullet = ExtResource("9_ewgrt")
 shell_launch_force = 100.0
 shell_damage = 10.0
 main_gun_reload_speed = 1.0
 main_gun_ammo = 5
-bullet_launch_force = 100.0
-bullet_damage = 1.0
-coax_gun_reload_speed = 1.0
-coax_gun_fire_rate = 5.0
-coax_gun_ammo = 100
 rotate_speed = 2.0
 elevate_speed = 1.0
 
+[node name="main_gun_control" type="Node" parent="."]
+script = ExtResource("17_tordk")
+
+[node name="coax_gun_control" type="Node" parent="." node_paths=PackedStringArray("tank", "audio_control", "coax_gun", "coax_gun_muzzle")]
+script = ExtResource("18_5mw2g")
+tank = NodePath("..")
+audio_control = NodePath("../audio_control")
+bullet = ExtResource("9_ewgrt")
+coax_gun = NodePath("../turret_base/coax_gun")
+coax_gun_muzzle = NodePath("../turret_base/coax_gun/coax_gun_muzzle")
+bullet_launch_force = 100.0
+bullet_damage = 1.0
+coax_gun_reload_time = 1.0
+coax_gun_fire_rate = 60.0
+coax_gun_max_ammo = 50
+coax_gun_current_ammo = 50
+
 [node name="turret_base" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.873112, 0.157389)
+
+[node name="turret_audio_stream" type="AudioStreamPlayer3D" parent="turret_base"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.873112, -0.157389)
+stream = ExtResource("5_givrw")
+autoplay = true
 
 [node name="camera_orbit_point" type="Node3D" parent="turret_base"]
 
@@ -432,11 +468,19 @@ transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -0.27345, 0.530718, 0.750315
 mesh = SubResource("ArrayMesh_c1q6w")
 skeleton = NodePath("")
 
+[node name="coax_gun_audio_stream" type="AudioStreamPlayer3D" parent="turret_base/coax_gun"]
+stream = ExtResource("5_givrw")
+autoplay = true
+
 [node name="coax_gun_muzzle" type="Node3D" parent="turret_base/coax_gun"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.362504, 0)
 
 [node name="main_gun_base" type="Node3D" parent="turret_base"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.583816, 0.698518)
+
+[node name="main_gun_audio_stream" type="AudioStreamPlayer3D" parent="turret_base/main_gun_base"]
+stream = ExtResource("5_givrw")
+autoplay = true
 
 [node name="main_gun_mesh" type="MeshInstance3D" parent="turret_base/main_gun_base"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.57628e-07, 1.78814e-07)
