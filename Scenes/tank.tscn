@@ -431,10 +431,9 @@ coax_gun = NodePath("../turret_base/coax_gun")
 coax_gun_muzzle = NodePath("../turret_base/coax_gun/coax_gun_muzzle")
 bullet_launch_force = 100.0
 bullet_damage = 1.0
-coax_gun_reload_time = 1.0
-coax_gun_fire_rate = 60.0
-coax_gun_max_ammo = 50
-coax_gun_current_ammo = 50
+reload_cooldown = 2.5
+fire_rate = 1200.0
+max_ammo = 250
 
 [node name="turret_base" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.873112, 0.157389)

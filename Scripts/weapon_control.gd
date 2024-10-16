@@ -46,7 +46,7 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("main_fire") :
 		fire_main_gun()
 		
-	if Input.is_action_pressed("secondary_fire") :
+	if Input.is_action_just_pressed("secondary_fire") :
 		coax_gun_control.start_firing_coax_gun()
 	if Input.is_action_just_released("secondary_fire") :
 		coax_gun_control.stop_firing_coax_gun()
